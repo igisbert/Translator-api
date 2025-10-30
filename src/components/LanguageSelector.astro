@@ -1,0 +1,149 @@
+---
+// Definir el tipo para los idiomas
+interface Language {
+  value: string;
+  label: string;
+}
+
+// Definir las propiedades del componente
+interface Props {
+  id: string;
+  label?: string;
+  selected?: string;
+  languages: Language[];
+}
+
+// Idiomas por defecto
+import { languages as defaultLanguages } from "../utils/constants";
+
+// Obtener propiedades tipadas
+const {
+  id,
+  label,
+  selected = "es",
+  languages = defaultLanguages,
+} = Astro.props as Props;
+---
+
+<div class="language-selector-wrapper">
+  {
+    label && (
+      <label for={id} class="sr-only">
+        {label}
+      </label>
+    )
+  }
+  <select id={id} class="language-selector">
+    <!-- <button><selectedcontent></selectedcontent></button> -->
+    {
+      languages.map(({ value, label }) => (
+        <option value={value} selected={value === selected}>
+          {label}
+        </option>
+      ))
+    }
+  </select>
+</div>
+
+<style>
+  .language-selector-wrapper {
+    width: 100%;
+    position: relative;
+  }
+
+  .language-selector {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--surface-color);
+    color: var(--secondary-color);
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .language-selector:hover,
+  .language-selector:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px
+      color-mix(in srgb, var(--primary-color) 10%, transparent);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+</style>
+
+<style is:global>
+  select,
+  ::picker(select) {
+    appearance: base-select;
+  }
+
+  ::picker(select) {
+    border-radius: var(--border-radius);
+    border: none;
+    border: 1px solid var(--border-color);
+    margin-top: 0.75rem;
+    z-index: 500;
+  }
+
+  option {
+    text-align: center;
+    padding: 0.75rem;
+  }
+
+  option:nth-child(odd) {
+    background-color: color-mix(in srgb, var(--primary-color) 20%, transparent);
+  }
+
+  option:hover {
+    background-color: var(--primary-color);
+    color: var(--surface-color);
+  }
+
+  option:checked {
+    background-color: var(--primary-color);
+    color: var(--surface-color);
+  }
+
+  select::picker-icon {
+    color: var(--secondary-color);
+    transition: 0.4s rotate;
+  }
+  select:open::picker-icon {
+    rotate: 180deg;
+  }
+
+  /* Estilos para la scrollbar de los textareas */
+  ::picker(select)::-webkit-scrollbar {
+    width: 16px; /* Ancho de la scrollbar vertical */
+  }
+
+  ::picker(select)::-webkit-scrollbar-track {
+    background: transparent; /* Fondo transparente */
+  }
+
+  ::picker(select)::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color); /* Color sutil para el "pulgar" */
+    border-radius: 10px; /* Bordes redondeados */
+    border: 6px solid transparent; /* Borde transparente para que el pulgar sea más delgado */
+    background-clip: padding-box; /* Asegura que el borde no afecte el color del pulgar */
+  }
+
+  ::picker(select)::-webkit-scrollbar-thumb:hover {
+    background-color: var(
+      --primary-color
+    ); /* Un poco más visible al pasar el ratón */
+    cursor: pointer; /* Cursor de puntero */
+  }
+</style>

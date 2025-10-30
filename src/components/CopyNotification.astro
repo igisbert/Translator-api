@@ -1,0 +1,71 @@
+<div id="copy-notification" class="notification">
+  <p>¡Copiado al portapapeles!</p>
+</div>
+
+<script>
+  document.addEventListener("notification", (event) => {
+    const notification = document.getElementById("copy-notification");
+    const messageElement = notification?.querySelector("p");
+
+    if (notification && messageElement) {
+      messageElement.textContent =
+        (event as CustomEvent).detail?.message ?? "¡Copiado al portapapeles!";
+      notification.classList.add("show");
+      setTimeout(() => {
+        notification.classList.remove("show");
+        notification.classList.add("hide");
+        setTimeout(() => {
+          notification.classList.remove("hide");
+        }, 300); // Match animation duration
+      }, 3000);
+    }
+  });
+</script>
+
+<style>
+  .notification {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--background-color) 40%, transparent);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(calc(100% + 2rem));
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  }
+
+  .notification.show {
+    opacity: 1;
+    visibility: visible;
+    animation: slide-in-right 0.3s ease forwards;
+  }
+
+  .notification.hide {
+    animation: slide-out-right 0.3s ease forwards;
+  }
+
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(calc(100% + 2rem));
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slide-out-right {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(calc(100% + 2rem));
+    }
+  }
+</style>

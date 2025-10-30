@@ -1,0 +1,47 @@
+---
+import "../styles/reset.css";
+import "../styles/translator.css";
+
+const description = "Traductor local para traducir texto sin conexión.";
+const website = "https://translator.pages.dev";
+const title = "Pocket Translator";
+---
+
+<html lang="es">
+  <head>
+    <!-- Configuración básica -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Título y descripción -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={website} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/og_card.webp" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="/og_card.webp" />
+
+    <!-- Web App -->
+    <meta name="application-name" content={title} />
+    <meta name="theme-color" content="#ff4081" />
+
+    <!-- SEO y Rendimiento -->
+    <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content="index, follow" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

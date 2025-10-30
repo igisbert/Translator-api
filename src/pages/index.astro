@@ -1,0 +1,122 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Blob from "../components/Blob.astro";
+import UnsupportedBrowser from "../components/UnsupportedBrowser.astro";
+import TranslationBox from "../components/TranslationBox.astro";
+import LanguageSelector from "../components/LanguageSelector.astro";
+import CopyNotification from "../components/CopyNotification.astro";
+import LanguageConfigPanel from "../components/LanguageConfigPanel.astro";
+import Arrows from "../assets/arrows.svg";
+import Settings from "../assets/settings.svg";
+import { languages as defaultLanguages } from "../utils/constants.js";
+
+// Estado inicial de los idiomas
+const sourceLanguage = "es";
+const targetLanguage = "en";
+---
+
+<Layout>
+  <button id="open-panel-button" class="open-panel-button"
+    ><Settings width={36} height={36} color="var(--background-color)" /></button
+  >
+  <Blob top="-5%" left="0%" />
+  <Blob
+    bottom="-8%"
+    right="-10%"
+    size="40%"
+    color="var(--gradient-end)"
+    opacity="0.15"
+  />
+  <main>
+    <div class="container">
+      <h1 class="title">Pocket Translator</h1>
+      <h2 class="subtitle">
+        Traduce texto localmente en tu navegador utilizando la API Translator
+        impulsada con Gemini Nano.
+      </h2>
+
+      <div class="language-selectors">
+        <LanguageSelector
+          id="source-language"
+          label="Idioma de origen"
+          selected={sourceLanguage}
+          languages={defaultLanguages}
+        />
+
+        <LanguageSelector
+          id="target-language"
+          label="Idioma de destino"
+          selected={targetLanguage}
+          languages={defaultLanguages}
+        />
+      </div>
+
+      <div class="translation-container">
+        <TranslationBox
+          id="source-text"
+          label="Texto a traducir"
+          placeholder="Escribe aquí el texto a traducir..."
+          showCharCount={false}
+        />
+        <div
+          class="arrows-container"
+          style="display: flex; align-items: center; justify-content: center;"
+        >
+          <Arrows width={48} height={48} color="var(--primary-color)" />
+        </div>
+        <TranslationBox
+          id="target-text"
+          label="Traducción"
+          placeholder="..."
+          readOnly={true}
+          showLoader={true}
+          showCopyButton={true}
+        />
+      </div>
+
+      <div class="button-container">
+        <button id="translate-button" class="translate-button">
+          Traducir
+        </button>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <p>Demo de la API Translator de Google Chrome.</p>
+  </footer>
+
+  <!-- Modal de navegador no soportado -->
+  <UnsupportedBrowser />
+  <CopyNotification />
+  <LanguageConfigPanel />
+</Layout>
+
+<script>
+  import { handleUnsupportedBrowser } from "../utils/handleUnsupportedBrowser.js";
+  import { handleTranslation } from "../utils/handleTranslation.js";
+  import { initLanguageSelectors } from "../utils/initLanguageSelectors.js";
+  import { handleLanguageUpdates } from "../utils/handleLanguageUpdates.js";
+
+  handleUnsupportedBrowser();
+  initLanguageSelectors();
+  handleLanguageUpdates();
+
+  const translateButton = document.getElementById(
+    "translate-button"
+  ) as HTMLButtonElement;
+  const sourceText = document.getElementById("source-text");
+  const targetText = document.getElementById("target-text");
+  const sourceLanguage = document.getElementById("source-language");
+  const targetLanguage = document.getElementById("target-language");
+  const loader = document.getElementById("loader");
+
+  translateButton.addEventListener("click", async () => {
+    await handleTranslation(
+      sourceText,
+      targetText,
+      sourceLanguage,
+      targetLanguage,
+      loader
+    );
+  });
+</script>

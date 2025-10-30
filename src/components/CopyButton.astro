@@ -1,0 +1,55 @@
+---
+import Copy from "../assets/copy.svg";
+
+interface Props {
+  elementToCopyId: string;
+}
+
+const { elementToCopyId } = Astro.props;
+---
+
+<button class="copy-button" title="Copy to clipboard">
+  <Copy width={24} height={24} color="var(--primary-color)" />
+</button>
+
+<style>
+  .copy-button {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+  }
+
+  .copy-button:hover {
+    background-color: color-mix(in srgb, var(--surface-color) 10%, transparent);
+  }
+</style>
+
+<script define:vars={{ elementToCopyId }}>
+  const copyButton = document.currentScript.previousElementSibling;
+  const elementToCopy = document.getElementById(elementToCopyId);
+
+  if (copyButton && elementToCopy) {
+    copyButton.addEventListener("click", () => {
+      if (elementToCopy.value) {
+        navigator.clipboard
+          .writeText(elementToCopy.value)
+          .then(() => {
+            const event = new CustomEvent("notification", {
+              bubbles: true,
+              composed: true,
+            });
+            copyButton.dispatchEvent(event);
+          })
+          .catch((err) => {
+            console.error("Failed to copy text: ", err);
+          });
+      }
+    });
+  }
+</script>

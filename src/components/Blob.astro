@@ -1,0 +1,34 @@
+---
+interface Props {
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
+  size?: string;
+  color?: string;
+  opacity?: string;
+}
+
+const {
+  top = "auto",
+  bottom = "auto",
+  left = "auto",
+  right = "auto",
+  size = "60%",
+  color = "var(--primary-color)",
+  opacity = "0.2",
+} = Astro.props;
+---
+
+<div
+  class="blob"
+  style={`top: ${top}; bottom: ${bottom}; left: ${left}; right: ${right}; width: ${size}; height: ${size}; background: radial-gradient(circle, ${color} 0%, transparent 70%); opacity: ${opacity};`}
+></div>
+
+<style>
+  .blob {
+    position: fixed;
+    filter: blur(120px);
+    z-index: 0;
+  }
+</style>
